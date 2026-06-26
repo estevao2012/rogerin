@@ -1,0 +1,17 @@
+{
+  "name": "rogerin",
+  "owner": {
+    "name": "Estevão Andrade"
+  },
+  "metadata": {
+    "description": "As skills que o Estevão usa no Claude Code e Cowork — na voz do Rogerinho do Ingá (Choque de Cultura), porém úteis.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "rogerin",
+      "source": "./",
+      "description": "Skills úteis com a personalidade ímpar do Rogerinho do Ingá. Começa com resume-rogerin (TL;DR da thread na voz do Rogerin)."
+    }
+  ]
+}

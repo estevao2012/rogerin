@@ -1,0 +1,23 @@
+{
+  "name": "rogerin",
+  "description": "Skills úteis com a personalidade ímpar do Rogerinho do Ingá (Choque de Cultura), porém úteis. Coleção pessoal do Estevão para Claude Code e Cowork. Começa com resume-rogerin.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Estevão Andrade"
+  },
+  "homepage": "https://github.com/estevao2012/rogerin",
+  "repository": "https://github.com/estevao2012/rogerin",
+  "license": "MIT",
+  "keywords": [
+    "rogerin",
+    "rogerinho",
+    "choque-de-cultura",
+    "resume",
+    "resumo",
+    "tldr",
+    "recap",
+    "status",
+    "handoff",
+    "skills"
+  ]
+}
