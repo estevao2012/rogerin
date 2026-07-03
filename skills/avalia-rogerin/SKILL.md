@@ -52,8 +52,16 @@ Só leitura de arquivos. O que só dá pra saber rodando → marca explícito co
 3. **Testes (unit/integração)** — presença e qualidade; cobre o que é **crítico**?;
    mocks/fakes adequados; o design é testável? Ausência de testes **pesa forte** pro
    lado de rejeitar.
-4. **Corretude & funciona razoável** — leitura estática: resolve o problema?, edge
-   cases, tratamento de erro, bugs visíveis. (Sem executar — ver acima.)
+4. **Corretude — resolve o que foi pedido?** — o núcleo da avaliação: **o quão perto o
+   resultado entregue está do que o enunciado pede**. Análise estática (não roda — ver acima):
+   - **Cobertura do enunciado:** todos os outputs/entregáveis exigidos existem, no formato
+     pedido (schema/campos/estrutura/nomes)? Cada requisito foi atendido, ou ficou algo de fora?
+   - **Confere com o esperado:** onde houver resultado de referência ou output já gerado no
+     repo, cruza por amostra contra o que o enunciado descreve — divergência é red flag.
+   - **Edge cases do enunciado:** os casos que o próprio problema cita estão tratados?
+   - **Lógica & robustez:** tratamento de erro, bugs visíveis na leitura, premissas que
+     quebram fora do dado fornecido. O que só dá pra confirmar rodando → **"não verificado
+     (exigiria execução)"**, nunca palpite disfarçado de fato.
 5. **Legibilidade & idiomático** — naming, organização de arquivos, uso idiomático da
    linguagem/framework, consistência, README onde importa.
 6. **Reprodutibilidade & setup (DX)** — dá pra pegar e rodar? **README com instruções
