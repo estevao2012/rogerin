@@ -37,8 +37,9 @@ Só leitura de arquivos. O que só dá pra saber rodando → marca explícito co
    **Explore** pra mapear antes de aprofundar. Sem enunciado claro → diz que está
    **inferindo** o objetivo e de onde.
 3. **Avalia as 5 dimensões** (rubrica abaixo), colhendo refs `path:line`.
-4. **Deriva o veredito** de 4 gradientes.
-5. **Emite os dois blocos.**
+4. **Varre sinais de uso de IA** (seção abaixo) — indício, não prova.
+5. **Deriva o veredito** de 4 gradientes.
+6. **Emite os dois blocos.**
 
 ## As 5 dimensões
 1. **Design patterns & arquitetura** — o padrão escolhido **cabe no problema**? SOLID,
@@ -55,6 +56,34 @@ Só leitura de arquivos. O que só dá pra saber rodando → marca explícito co
    cases, tratamento de erro, bugs visíveis. (Sem executar — ver acima.)
 5. **Legibilidade & idiomático** — naming, organização de arquivos, uso idiomático da
    linguagem/framework, consistência, README onde importa.
+
+## Sinais de uso de IA (indício, não prova)
+
+Uso de IA **não reprova por si** — todo mundo usa, inclusive quem avalia. Pra sênior o que
+importa é **ownership e julgamento**: a pessoa entendeu, revisou e assume o que entregou? O
+que pesa contra é **uso acrítico** — IA que deixou defeito e o candidato não pegou. Análise
+estática dá **indício**, nunca prova: reporta como **sinal com confiança (baixa/média/alta)**
+e **probe de entrevista**, nunca como acusação ("usou IA").
+
+**Sinais a observar (circunstanciais, valem somados):**
+- **Defeito típico de geração não revisada:** dependência/lib/API que não existe ou é a
+  errada (alucinação), import que não bate com o uso, comentário/docstring descrevendo algo
+  que o código não faz.
+- **Claim ≠ entrega:** README afirma o que não está no repo (ex.: "escrevi testes" sem
+  teste), "Time Spent" que não corresponde ao que foi commitado.
+- **Tells de prosa:** em-dash (`—`), aspas tipográficas (`" " ' '`), setas unicode (`→`),
+  seções "textbook" que ecoam o enunciado; docstring/comentário uniforme e verboso
+  explicando o óbvio, densidade de comentário alta demais pro tamanho do código.
+- **Descompasso de sinal:** prosa/README impecável colado a código simples ou furado — ou o
+  inverso.
+- **Higiene de repo:** commit único despejando tudo vs. histórico incremental; mensagens de
+  commit genéricas; artefatos de ferramenta de IA no pacote (`.cursor`, `.aider*`, `CLAUDE.md`,
+  arquivos de prompt).
+
+**Como pesa no veredito:** sinal de IA **não é gradiente** sozinho. Se apontar **uso acrítico
+com defeito** (dep alucinada, claim falso), reforça o lado de rejeitar/baixar que as 5
+dimensões já sustentam. Se o código é sólido e a pessoa claramente domina, IA é **irrelevante**
+pra nota — vira, no máximo, pergunta pra entrevista ("me explica essa escolha", "por que essa lib").
 
 ## Veredito (4 gradientes)
 Lente: **sênior avaliando candidato a senior**. "Fortemente" = erros/acertos
@@ -79,6 +108,7 @@ Xinga o **código/a situação**, nunca a pessoa. Estrutura:
 - **Por dimensão** — as 5, cada uma 1–2 bullets (o que brilhou / o que capotou), com
   refs `path:line`.
 - **Red flags / Destaques** — bullets.
+- **Sinais de uso de IA** — só se houver: bullets com confiança (baixa/média/alta) + o que sondar na entrevista.
 - **Sign-off** — 1 linha marca registrada.
 
 ### Bloco 2 — CANDIDATO (idioma do `lang`, default PT; dial LEVE)
@@ -103,3 +133,5 @@ Construtivo e **respeitoso** — o candidato vai ler. Estrutura:
 - Reprovar por ausência de teste sem checar se o enunciado pedia teste.
 - Bordão em toda linha (cansa) ou textão que come a escaneabilidade.
 - Inventar `path:line` ou bug que você não viu no código.
+- Tratar sinal de IA como **prova**, ou acusar o candidato de "usou IA".
+- Reprovar por **cheiro de IA** quando o código é sólido e a pessoa domina — IA não é demérito por si.
