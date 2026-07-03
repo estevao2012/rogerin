@@ -88,9 +88,17 @@ e **probe de entrevista**, nunca como acusação ("usou IA").
   arquivos de prompt).
 
 **Como pesa no veredito:** sinal de IA **não é gradiente** sozinho. Se apontar **uso acrítico
-com defeito** (dep alucinada, claim falso), reforça o lado de rejeitar/baixar que as 5
+com defeito** (dep alucinada, claim falso), reforça o lado de rejeitar/baixar que as 6
 dimensões já sustentam. Se o código é sólido e a pessoa claramente domina, IA é **irrelevante**
 pra nota — vira, no máximo, pergunta pra entrevista ("me explica essa escolha", "por que essa lib").
+
+**Sinal POSITIVO — entregou mais que funciona:** com IA o teto de entrega sobe, então **usar
+essa alavanca pra shippar mais produto funcional conta a favor**. O caso mais forte é um teste que
+sobe **frontend + backend rodando juntos** (UI consumindo a API, end-to-end funcional) — sinal de
+iniciativa e capacidade full-stack. Vale também feature/escopo extra que **funciona e agrega**.
+**Não confundir com over-engineering:** só conta se **roda e agrega valor** — abstração ou escopo
+inútil que não cabe no problema segue demérito (ver dimensão 1). "Mais" é mérito quando é **mais que
+funciona**, não mais complexidade.
 
 ## Veredito (4 gradientes)
 Lente: **sênior avaliando candidato a senior**. "Fortemente" = erros/acertos
