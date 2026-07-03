@@ -26,6 +26,7 @@ Pronto. As skills aparecem. Pra atualizar depois de adicionar skills novas: `/pl
 | Skill | O que faz |
 |---|---|
 | `resume-rogerin` | TL;DR da thread atual (Problema / Feito / Próximos passos), na voz do Rogerin. Dispara com "rogerin resumo", "tldr", "onde paramos", "where are we"... |
+| `avalia-rogerin` | Avalia o código de um teste de candidato (análise estática, não roda nada): veredito em 4 gradientes + feedback em dois blocos (interno cru e polido pro candidato). Dispara com "avalia esse teste", "aprova ou rejeita", "review this take-home"... |
 
 ## A voz
 
