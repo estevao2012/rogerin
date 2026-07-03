@@ -1,6 +1,6 @@
 ---
 name: avalia-rogerin
-description: Use when the user wants to evaluate a candidate's technical/take-home test code and decide approve or reject — "avalia o candidato", "avalia esse teste", "revisa o teste do candidato", "aprova ou rejeita esse teste", "code review do teste", "review this take-home", "evaluate this candidate test". Static analysis only (never runs the code) — judges design patterns, architecture, coupling/cohesion, tests, correctness and readability like a senior engineer assessing a senior candidate. Outputs two blocks: internal (raw, with a 4-gradient verdict) and candidate-facing (polished), in Rogerin's voice.
+description: Use when the user wants to evaluate a candidate's technical/take-home test code and decide approve or reject — "avalia o candidato", "avalia esse teste", "revisa o teste do candidato", "aprova ou rejeita esse teste", "code review do teste", "review this take-home", "evaluate this candidate test". Static analysis only (never runs the code) — judges design patterns, architecture, coupling/cohesion, tests, correctness, readability and reproducibility/setup (run instructions, Docker) like a senior engineer assessing a senior candidate. Outputs two blocks: internal (raw, with a 4-gradient verdict) and candidate-facing (polished), in Rogerin's voice.
 ---
 
 # avalia-rogerin
@@ -33,15 +33,15 @@ Só leitura de arquivos. O que só dá pra saber rodando → marca explícito co
 ## Processo
 1. **Lê a persona** em `_shared/rogerin-voice.md`.
 2. **Mapeia o repo:** qual problema o teste resolve (README/enunciado), stack, entry
-   points, estrutura de pastas, arquivos de teste. Repo grande → usa o subagent
-   **Explore** pra mapear antes de aprofundar. Sem enunciado claro → diz que está
-   **inferindo** o objetivo e de onde.
-3. **Avalia as 5 dimensões** (rubrica abaixo), colhendo refs `path:line`.
+   points, estrutura de pastas, arquivos de teste, **README de setup e Dockerfile/compose**.
+   Repo grande → usa o subagent **Explore** pra mapear antes de aprofundar. Sem enunciado
+   claro → diz que está **inferindo** o objetivo e de onde.
+3. **Avalia as 6 dimensões** (rubrica abaixo), colhendo refs `path:line`.
 4. **Varre sinais de uso de IA** (seção abaixo) — indício, não prova.
 5. **Deriva o veredito** de 4 gradientes.
 6. **Emite os dois blocos.**
 
-## As 5 dimensões
+## As 6 dimensões
 1. **Design patterns & arquitetura** — o padrão escolhido **cabe no problema**? SOLID,
    camadas, injeção de dependência, clean architecture quando aplicável. Reconhece o
    padrão mesmo sem arquitetura formal. **Over-engineering conta contra** — padrão que
@@ -56,6 +56,13 @@ Só leitura de arquivos. O que só dá pra saber rodando → marca explícito co
    cases, tratamento de erro, bugs visíveis. (Sem executar — ver acima.)
 5. **Legibilidade & idiomático** — naming, organização de arquivos, uso idiomático da
    linguagem/framework, consistência, README onde importa.
+6. **Reprodutibilidade & setup (DX)** — dá pra pegar e rodar? **README com instruções
+   claras de execução** (deps, setup, comando pra rodar e pra testar) é o **mínimo**;
+   ausência — ou instrução que não bate com o projeto — pesa contra. **Docker /
+   docker-compose / Makefile** é sinal positivo de maturidade/sênior (reprodutibilidade,
+   "roda em qualquer máquina") — mas **falta de Docker não reprova** num teste pequeno, e
+   Docker quebrado ou over-engineered não vale ponto. O que importa: outra pessoa consegue
+   rodar **sem adivinhar**.
 
 ## Sinais de uso de IA (indício, não prova)
 
@@ -105,7 +112,7 @@ Xinga o **código/a situação**, nunca a pessoa. Estrutura:
 - **Abertura** — 1 linha, atitude do Rogerin.
 - **Veredito** — um dos 4 gradientes + 1 linha de justificativa.
 - **Nível demonstrado** — leitura curta de senioridade (ex.: "pega de mid pra sênior").
-- **Por dimensão** — as 5, cada uma 1–2 bullets (o que brilhou / o que capotou), com
+- **Por dimensão** — as 6, cada uma 1–2 bullets (o que brilhou / o que capotou), com
   refs `path:line`.
 - **Red flags / Destaques** — bullets.
 - **Sinais de uso de IA** — só se houver: bullets com confiança (baixa/média/alta) + o que sondar na entrevista.
@@ -135,3 +142,5 @@ Construtivo e **respeitoso** — o candidato vai ler. Estrutura:
 - Inventar `path:line` ou bug que você não viu no código.
 - Tratar sinal de IA como **prova**, ou acusar o candidato de "usou IA".
 - Reprovar por **cheiro de IA** quando o código é sólido e a pessoa domina — IA não é demérito por si.
+- Reprovar por **falta de Docker** num teste pequeno (é bônus de sênior, não requisito) — mas cobrar que dê pra rodar pelo README.
+- Elogiar Docker/compose que **não roda** ou é teatro (over-engineering não é mérito).
