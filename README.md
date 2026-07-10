@@ -28,6 +28,7 @@ Pronto. As skills aparecem. Pra atualizar depois de adicionar skills novas: `/pl
 | `resume-rogerin` | TL;DR da thread atual (Problema / Feito / Próximos passos), na voz do Rogerin. Dispara com "rogerin resumo", "tldr", "onde paramos", "where are we"... |
 | `avalia-rogerin` | Avalia o código de um teste de candidato (análise estática, não roda nada): veredito em 4 gradientes + feedback em dois blocos (interno cru e polido pro candidato). Dispara com "avalia esse teste", "aprova ou rejeita", "review this take-home"... |
 | `revisa-o-pr-rogerin` | Revisa um PR do GitHub (só o diff, não roda nem edita nada): classifica achados por severidade e crava **Approve** ou **Request changes** — qualquer médio/alto bloqueia. Posta o review em inglês profissional com comentários inline (só depois do teu OK) e te dá o recap na voz do Rogerin. Dispara com "revisa esse PR", "review this PR"... |
+| `posta-no-slack-rogerin` | Redige uma mensagem de Slack em **inglês profissional** — curta, mas com detalhe suficiente pra explicar a intenção — no formato mrkdwn. Mostra o rascunho e só envia depois do teu OK (via Slack, ou texto pra copiar); recap na voz do Rogerin. Dispara com "posta no Slack", "avisa o time no Slack", "write a Slack post"... |
 
 ## A voz
 
@@ -56,7 +57,9 @@ rogerin/
 │   │   └── SKILL.md
 │   ├── avalia-rogerin/
 │   │   └── SKILL.md
-│   └── revisa-o-pr-rogerin/
+│   ├── revisa-o-pr-rogerin/
+│   │   └── SKILL.md
+│   └── posta-no-slack-rogerin/
 │       └── SKILL.md
 └── docs/specs/            # designs
 ```
