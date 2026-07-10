@@ -1,9 +1,9 @@
 ---
-name: revisa-rogerin
-description: Use when the user wants to review a GitHub pull request and land a verdict (approve or request changes) — "revisa esse PR", "revisa o pull request", "revisa Rogerin", "review this PR", "code review desse PR", "olha esse pull request pra mim". Static review of the diff only — never edits code, never runs anything. Classifies findings by severity (high/medium/low); any high or medium blocks (Request changes), otherwise Approve. Posts an English, work-safe review on GitHub with inline comments — but only after showing you the draft and getting your OK. Gives you a raw recap in Rogerin's voice (PT-BR) in the terminal.
+name: revisa-o-pr-rogerin
+description: Use when the user wants to review a GitHub pull request and land a verdict (approve or request changes) — "revisa esse PR", "revisa o pull request", "revisa o pr rogerin", "review this PR", "code review desse PR", "olha esse pull request pra mim". Static review of the diff only — never edits code, never runs anything. Classifies findings by severity (high/medium/low); any high or medium blocks (Request changes), otherwise Approve. Posts an English, work-safe review on GitHub with inline comments — but only after showing you the draft and getting your OK. Gives you a raw recap in Rogerin's voice (PT-BR) in the terminal.
 ---
 
-# revisa-rogerin
+# revisa-o-pr-rogerin
 
 Revisa um **pull request do GitHub** por **análise estática do diff** e crava um
 veredito: **Approve** ou **Request changes**. Depois do teu OK, submete o review no
@@ -16,8 +16,8 @@ nada.**
 são sagrados**.
 
 ## When to use
-- `/revisa-rogerin [pr]`
-- "revisa esse PR", "revisa o pull request", "revisa Rogerin", "olha esse PR pra mim"
+- `/revisa-o-pr-rogerin [pr]`
+- "revisa esse PR", "revisa o pull request", "revisa o pr rogerin", "olha esse PR pra mim"
 - "review this PR", "code review desse pull request", "aprova ou request change esse PR"
 
 ## Input

@@ -1,4 +1,4 @@
-# Design — Rogerin: skill `revisa-rogerin` (review de pull request do GitHub)
+# Design — Rogerin: skill `revisa-o-pr-rogerin` (review de pull request do GitHub)
 
 **Data:** 2026-07-10
 **Autor:** Estevão Andrade (estevao2012)
@@ -31,7 +31,7 @@ Como toda skill do plugin, a voz é tempero — os fatos e o veredito são sagra
 | Voz no terminal | **Rogerin raiz** (PT-BR) |
 | Confirmação | **Obrigatória** — mostra o rascunho e só posta após OK explícito |
 | Audiência | **Dois blocos** — recap no terminal (Rogerin) e review pro GitHub (inglês) |
-| Nome | `revisa-rogerin` |
+| Nome | `revisa-o-pr-rogerin` |
 
 ## Arquitetura
 
@@ -45,23 +45,23 @@ rogerin/
 │   │   └── rogerin-voice.md        # persona compartilhada (já existe)
 │   ├── resume-rogerin/SKILL.md     # já existe
 │   ├── avalia-rogerin/SKILL.md     # já existe
-│   └── revisa-rogerin/SKILL.md     # NOVO
+│   └── revisa-o-pr-rogerin/SKILL.md     # NOVO
 ├── .claude-plugin/
 │   ├── marketplace.json            # bump de versão
 │   └── plugin.json                 # + keywords, bump de versão
 ├── docs/specs/
-│   └── 2026-07-10-revisa-rogerin-design.md
+│   └── 2026-07-10-revisa-o-pr-rogerin-design.md
 └── README.md                       # lista a nova skill
 ```
 
 ## Componentes
 
-### `skills/revisa-rogerin/SKILL.md`
+### `skills/revisa-o-pr-rogerin/SKILL.md`
 
-**Frontmatter** — `name: revisa-rogerin`; `description` com os gatilhos (PT + EN).
+**Frontmatter** — `name: revisa-o-pr-rogerin`; `description` com os gatilhos (PT + EN).
 
 **Trigger / when to use:**
-- `/revisa-rogerin [pr]`
+- `/revisa-o-pr-rogerin [pr]`
 - "revisa esse PR", "revisa o pull request", "revisa Rogerin", "review this PR"
 
 **Input:** PR do GitHub. Default = PR da branch atual; aceita número/URL opcional. `gh` CLI.
@@ -102,11 +102,11 @@ explícito no corpo.
 - `marketplace.json`: bump de versão e descrição para bater com o plugin.
 
 ### `README.md`
-- Lista `revisa-rogerin` junto das demais skills, com 1 linha do que faz e o gatilho.
+- Lista `revisa-o-pr-rogerin` junto das demais skills, com 1 linha do que faz e o gatilho.
 
 ## Fluxo de uso
 
-1. Estevão num repo, numa branch com PR aberto → `/revisa-rogerin` (ou "revisa esse PR",
+1. Estevão num repo, numa branch com PR aberto → `/revisa-o-pr-rogerin` (ou "revisa esse PR",
    opcional número/URL).
 2. Rogerin lê a persona, resolve o PR, pega o diff, revisa as 5 dimensões (sem rodar nada).
 3. Mostra o **recap** (veredito + achados na voz do Rogerin) e o **rascunho do review**
@@ -127,7 +127,7 @@ explícito no corpo.
 
 ## Verificação (definição de pronto)
 
-- `skills/revisa-rogerin/SKILL.md` criado, frontmatter válido, gatilhos claros.
+- `skills/revisa-o-pr-rogerin/SKILL.md` criado, frontmatter válido, gatilhos claros.
 - `plugin.json` e `marketplace.json` com JSON válido e versões batendo.
 - `README.md` lista a nova skill.
 - Rodar a skill num PR de exemplo e confirmar: recap + rascunho saem, veredito respeita o
