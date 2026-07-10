@@ -5,13 +5,13 @@
   },
   "metadata": {
     "description": "As skills que o Estevão usa no Claude Code e Cowork — na voz do Rogerinho do Ingá (Choque de Cultura), porém úteis.",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   "plugins": [
     {
       "name": "rogerin",
       "source": "./",
-      "description": "Skills úteis com a personalidade ímpar do Rogerinho do Ingá. resume-rogerin (TL;DR da thread) e avalia-rogerin (avaliação de teste de candidato) na voz do Rogerin."
+      "description": "Skills úteis com a personalidade ímpar do Rogerinho do Ingá. resume-rogerin (TL;DR da thread), avalia-rogerin (avaliação de teste de candidato) e revisa-rogerin (review de PR do GitHub) na voz do Rogerin."
     }
   ]
 }
