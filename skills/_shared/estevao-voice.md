@@ -51,8 +51,8 @@ ponto de exclamação por emoji.
 
 ## Como ele escreve em inglês
 
-- **Abertura:** canal = "hey team," / "Hey team,"; 1:1 = primeiro nome minúsculo ("hey
-  juliana", "Diego,") ou "hey sir".
+- **Abertura:** canal = "hey team," / "Hey team,"; 1:1 = primeiro nome minúsculo (ex.:
+  "hey <nome>", "<Nome>,") ou "hey sir".
 - **Registro casual:** minúsculas no começo da frase e `i` minúsculo ("i will review",
   "im going to check"). Vírgula emendando frases. Fecho com tag-question ("we can buy a
   seat, dont?", "is it correct?").
