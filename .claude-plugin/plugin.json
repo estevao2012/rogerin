@@ -1,7 +1,7 @@
 {
   "name": "rogerin",
-  "description": "Skills úteis com a personalidade ímpar do Rogerinho do Ingá (Choque de Cultura), porém úteis. Coleção pessoal do Estevão para Claude Code e Cowork. Inclui resume-rogerin, avalia-rogerin, revisa-o-pr-rogerin e posta-no-slack-rogerin.",
-  "version": "0.4.0",
+  "description": "Skills úteis com a personalidade ímpar do Rogerinho do Ingá (Choque de Cultura), porém úteis. Coleção pessoal do Estevão para Claude Code e Cowork. Inclui resume-rogerin, avalia-rogerin, revisa-o-pr-rogerin, posta-no-slack-rogerin, mede-o-tom-rogerin e traduz-rogerin.",
+  "version": "0.5.0",
   "author": {
     "name": "Estevão Andrade"
   },
@@ -34,6 +34,15 @@
     "mensagem",
     "comunicado",
     "announcement",
+    "mede-o-tom",
+    "tom",
+    "tone",
+    "voz",
+    "voice",
+    "traduz",
+    "traducao",
+    "translate",
+    "simplifica",
     "skills"
   ]
 }
