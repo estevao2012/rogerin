@@ -41,7 +41,8 @@ de fato.
 4. **Lê contexto** do repo em volta das mudanças (arquivos vizinhos, convenções) — só leitura.
 5. **Classifica os achados** nas dimensões abaixo, cada um com **severidade** e ref `path:line`.
 6. **Deriva o veredito** pelo gate de severidade.
-7. **Monta o rascunho** (recap no terminal + review pro GitHub) e **mostra pro usuário**.
+7. **Monta o rascunho** (recap no terminal + review pro GitHub) e **mostra pro usuário** —
+   incluindo o check de motivação (ver Bloco 1), a pergunta de opinião antes do OK.
 8. **Só depois do OK**, submete o review via `gh api`.
 
 ## Dimensões (lente de PR, não de take-home)
@@ -111,6 +112,10 @@ Pro usuário, papo reto. Xinga o **código/a situação**, nunca a pessoa. Estru
 - **Veredito** — **Approve** ou **Request changes** + 1 linha de porquê.
 - **Achados** — agrupados por severidade (High / Medium / Low), cada um 1 linha com
   `path:line` e o que é. Vazio → "nada que bloqueie".
+- **Motivação** (opinião, não veredito) — **máx. 1–2 linhas**: o *porquê* da mudança
+  resumido (sem textão) + a pergunta direta: **"Concorda com essa motivação? Bate com o
+  que você já pensa sobre isso?"** É um gut-check pessoal, separado da análise técnica —
+  não mexe no gate de severidade.
 - **Vou postar** — 1 linha dizendo o evento e quantos comentários inline.
 - **Sign-off** — 1 linha marca registrada.
 
@@ -141,3 +146,5 @@ Exatamente o que vai ser postado — o usuário revisa antes do OK.
 - Tentar `APPROVE` no próprio PR (GitHub bloqueia) → cai pra `COMMENT` com veredito no corpo.
 - Aprovar com achado Medium/High "só de boa" — quebra o gate; qualquer médio+ bloqueia.
 - Inventar `path:line` ou bug que não está no diff.
+- Escrever textão na Motivação — é 1–2 linhas de *porquê* + a pergunta; senão ninguém lê.
+- Deixar a motivação influenciar a severidade/veredito — são coisas separadas.
