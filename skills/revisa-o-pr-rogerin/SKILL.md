@@ -1,15 +1,17 @@
 ---
 name: revisa-o-pr-rogerin
-description: Use when the user wants to review a GitHub pull request and land a verdict (approve or request changes) — "revisa esse PR", "revisa o pull request", "revisa o pr rogerin", "review this PR", "code review desse PR", "olha esse pull request pra mim". Static review of the diff only — never edits code, never runs anything. Classifies findings by severity (high/medium/low); any high or medium blocks (Request changes), otherwise Approve. Posts an English, work-safe review on GitHub with inline comments — but only after showing you the draft and getting your OK. Gives you a raw recap in Rogerin's voice (PT-BR) in the terminal.
+description: Use when the user wants to review a GitHub pull request and land a verdict (approve or request changes) — "revisa esse PR", "revisa o pull request", "revisa o pr rogerin", "review this PR", "code review desse PR", "olha esse pull request pra mim". Static review of the diff only — never edits code, never runs anything. Runs the code-review skill at max effort as the analysis engine, then classifies findings by severity (high/medium/low); any high or medium blocks (Request changes), otherwise Approve. Posts an English, work-safe review on GitHub with inline comments — but only after showing you the draft and getting your OK. Gives you a raw recap in Rogerin's voice (PT-BR) in the terminal.
 ---
 
 # revisa-o-pr-rogerin
 
 Revisa um **pull request do GitHub** por **análise estática do diff** e crava um
-veredito: **Approve** ou **Request changes**. Depois do teu OK, submete o review no
-GitHub — corpo-resumo + comentários **inline em inglês, tom profissional**. No terminal
-você recebe o papo reto na **voz do Rogerin** (PT-BR). **Nunca edita código, nunca roda
-nada.**
+veredito: **Approve** ou **Request changes**. O **motor técnico** é a skill
+**`code-review` rodando no effort `max`**; a `revisa-o-pr-rogerin` **traduz** os achados
+dela pra linguagem do Rogerin, aplica o **gate de severidade** e cuida do posting. Depois
+do teu OK, submete o review no GitHub — corpo-resumo + comentários **inline em inglês, tom
+profissional**. No terminal você recebe o papo reto na **voz do Rogerin** (PT-BR). **Nunca
+edita código, nunca roda nada.**
 
 **Antes de escrever, leia a persona:** `${CLAUDE_PLUGIN_ROOT}/skills/_shared/rogerin-voice.md`
 (tom, bordões, dial de palavrão, guardrails). A voz é tempero; **o veredito e os fatos
@@ -22,12 +24,14 @@ são sagrados**.
 
 ## Input
 - **PR do GitHub.** Default = o PR da **branch atual**. Aceita um `pr` opcional:
-  número (`123`) ou URL (`https://github.com/owner/repo/pull/123`).
+  número (`123`) ou URL (`https://github.com/owner/repo/pull/123`). Pode receber **mais de
+  um** PR.
 - Ferramenta: **`gh` CLI**. Sem PR pra branch atual e sem arg → pede o número/URL.
 
 ## NÃO EXECUTE, NÃO EDITE
 Review **estático** do diff. Proibido: rodar código/testes/build/linter, instalar deps,
-**editar qualquer arquivo** ou dar push/commit no branch do PR. Só leitura. O CI status
+**editar qualquer arquivo** ou dar push/commit no branch do PR. Só leitura. Invocar a skill
+`code-review` **é permitido** — é análise estática, não roda o código do PR. O CI status
 (`gh pr checks`) entra como **sinal**, não como algo que você roda. O que só dá pra saber
 rodando → marca **"not verified (would require running it)"**, nunca palpite disfarçado
 de fato.
@@ -36,16 +40,28 @@ de fato.
 1. **Lê a persona** em `_shared/rogerin-voice.md`.
 2. **Resolve o PR:** `gh pr view [pr] --json number,title,author,url,headRefName,baseRefName,body`
    e o status do CI com `gh pr checks [pr]`. Guarda `number` e `author.login`.
-3. **Pega o diff:** `gh pr diff [pr]`. Diff grande → usa o subagent **Explore** pra mapear
-   os arquivos tocados antes de aprofundar; se limitar cobertura, **diz o que ficou de fora**.
-4. **Lê contexto** do repo em volta das mudanças (arquivos vizinhos, convenções) — só leitura.
-5. **Classifica os achados** nas dimensões abaixo, cada um com **severidade** e ref `path:line`.
-6. **Deriva o veredito** pelo gate de severidade.
-7. **Monta o rascunho** (recap no terminal + review pro GitHub) e **mostra pro usuário** —
-   incluindo o check de motivação (ver Bloco 1), a pergunta de opinião antes do OK.
-8. **Só depois do OK**, submete o review via `gh api`.
+3. **Nomeia a sessão** logo no começo: define o título da sessão do Claude Code como
+   **`Rogerin Revisando <N>`** — `<N>` = número do PR. Mais de um PR → lista separada por
+   vírgula (`Rogerin Revisando 123, 456`). Usa a ferramenta de título de sessão do Claude
+   Code (ex.: `set_session_title`).
+4. **Roda o motor técnico:** invoca a skill **`code-review` com effort `max`** apontando pro
+   PR (o diff que você já resolveu). Ela é quem caça os problemas — **não refaça a análise na
+   mão**. Guarda os achados dela (com `path:line`, severidade/confiança e o porquê).
+5. **Passa a rede de segurança:** confere as **Dimensões** abaixo contra o diff só pra pegar
+   o que o code-review não pegou. Achado novo entra na mesma pilha. Se limitou cobertura em
+   diff grande, **diz o que ficou de fora**.
+6. **Traduz os achados** pra linguagem do Rogerin (PT-BR, papo reto): cada achado vira **1
+   linha clara** com `path:line`, severidade e o que é — sem jargão, sem despejar o texto cru
+   do code-review.
+7. **Classifica por severidade** (High/Medium/Low) e **deriva o veredito** pelo gate.
+8. **Monta o rascunho** (recap no terminal + review pro GitHub) e **mostra pro usuário** —
+   **achados primeiro, motivação por último** (ver Bloco 1), incluindo a pergunta de opinião
+   antes do OK.
+9. **Só depois do OK**, submete o review via `gh api`.
 
-## Dimensões (lente de PR, não de take-home)
+## Dimensões (rede de segurança sobre o code-review)
+O `code-review` já varre isto; a lista serve de **checklist de cobertura** pra pegar o que
+escapou — não pra refazer a análise. Lente de PR, não de take-home:
 1. **Corretude & bugs** — o diff faz o que promete? Edge cases, regressões, off-by-one,
    null/erro não tratado, lógica quebrada visível na leitura.
 2. **Segurança** — injection, authz/authn, segredo commitado, input não validado, uso
@@ -106,18 +122,20 @@ posted as a comment because GitHub blocks self-review."). Avisa isso no recap.
 Emite os dois, nesta ordem, separados por cabeçalho claro.
 
 ### Bloco 1 — RECAP NO TERMINAL (PT-BR, voz do Rogerin, dial raiz)
-Pro usuário, papo reto. Xinga o **código/a situação**, nunca a pessoa. Estrutura:
+Pro usuário, papo reto. Xinga o **código/a situação**, nunca a pessoa. **Achados primeiro,
+motivação por último** — a pergunta de opinião fecha a mensagem. Estrutura, nesta ordem:
 - **Abertura** — 1 linha, atitude do Rogerin.
 - **PR** — `#<n> <título>` + branch + status do CI numa linha.
 - **Veredito** — **Approve** ou **Request changes** + 1 linha de porquê.
-- **Achados** — agrupados por severidade (High / Medium / Low), cada um 1 linha com
-  `path:line` e o que é. Vazio → "nada que bloqueie".
-- **Motivação** (opinião, não veredito) — **máx. 1–2 linhas**: o *porquê* da mudança
-  resumido (sem textão) + a pergunta direta: **"Concorda com essa motivação? Bate com o
-  que você já pensa sobre isso?"** É um gut-check pessoal, separado da análise técnica —
-  não mexe no gate de severidade.
+- **Achados** — o que o code-review (effort max) + a rede acharam, **traduzido**: agrupados
+  por severidade (High / Medium / Low), cada um 1 linha com `path:line` e o que é, em
+  português claro (sem jargão nem texto cru da ferramenta). Vazio → "nada que bloqueie".
 - **Vou postar** — 1 linha dizendo o evento e quantos comentários inline.
 - **Sign-off** — 1 linha marca registrada.
+- **Motivação** (opinião, não veredito — **vem por último**, fecha a mensagem) — **máx.
+  1–2 linhas**: o *porquê* da mudança resumido (sem textão) + a pergunta direta: **"Concorda
+  com essa motivação? Bate com o que você já pensa sobre isso?"** É um gut-check pessoal,
+  separado da análise técnica — **não mexe no gate de severidade**.
 
 ### Bloco 2 — REVIEW PRO GITHUB (inglês, profissional, work-safe)
 Exatamente o que vai ser postado — o usuário revisa antes do OK.
@@ -128,17 +146,26 @@ Exatamente o que vai ser postado — o usuário revisa antes do OK.
   não-bloqueante.
 
 ## Rules
-- **Nunca executa** nada e **nunca edita/commita** — review estático, read-only.
+- **Nunca executa** o código do PR e **nunca edita/commita** — review estático, read-only.
+  (Invocar a skill `code-review` é análise estática e é permitido.)
+- **Motor técnico = `code-review` no effort `max`;** você traduz e aplica o gate, não refaz
+  a análise na mão. As Dimensões são rede de segurança, não uma segunda passada completa.
+- **Título da sessão = `Rogerin Revisando <N>`** (N = número do PR; vários → lista por vírgula).
 - **Confirmação obrigatória** antes de submeter qualquer review no GitHub.
 - **Fato é sagrado:** `path:line` exatos, zero invenção pra encaixar veredito ou bordão.
   Achado que exigiria rodar → "not verified (would require running it)".
 - **Gate binário:** High/Medium ⇒ Request changes; só Low/limpo ⇒ Approve.
 - **Voz separada por canal:** GitHub = inglês profissional work-safe; terminal = Rogerin raiz.
+- **Ordem do recap:** achados primeiro, motivação por último.
 - **Cobertura honesta:** diff grande e você limitou → diz o que ficou de fora.
 - **Nunca ofende pessoa;** critica o código/a mudança, nunca o autor.
 
 ## Common mistakes
 - Postar o review sem o OK do usuário — proibido, sempre confirma antes.
+- Refazer a análise na mão em vez de rodar o `code-review` no effort `max` — ele é o motor.
+- Despejar o texto cru do code-review no recap — tem que **traduzir** pra linguagem do Rogerin.
+- Esquecer de nomear a sessão `Rogerin Revisando <N>` no começo.
+- Botar a motivação no meio/topo do recap — ela vem **por último** e fecha com a pergunta.
 - Rodar testes/build/linter pra "confirmar" — é review estático.
 - Editar código ou dar push no branch do PR — a skill só comenta.
 - Gíria/palavrão nos comentários do GitHub — lá é work-safe; a voz raiz é só no terminal.
