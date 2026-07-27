@@ -40,18 +40,20 @@ de fato.
 1. **Lê a persona** em `_shared/rogerin-voice.md`.
 2. **Resolve o PR:** `gh pr view [pr] --json number,title,author,url,headRefName,baseRefName,body`
    e o status do CI com `gh pr checks [pr]`. Guarda `number` e `author.login`.
-3. **Resolve o ticket e responde a pergunta-chave (antes de tudo o mais):** procura uma
-   referência de ticket (ex.: `ABC-123`) no título do PR, no `headRefName` (nome da branch)
-   ou no corpo. Achou referência → lê o problema descrito usando o que já estiver disponível
-   no ambiente pra isso (o corpo/título do PR, ou uma ferramenta de tracking de tickets já
-   conectada — a skill é **agnóstica a qual sistema é esse**, nunca assume ou nomeia um
-   específico). **Não achou nenhuma referência nem descrição do problema** → marca a
-   checagem como **"sem ticket referenciado"** e segue (isso não bloqueia sozinho — não tem
-   o que comparar). Com o problema em mãos, responde a **primeira pergunta da revisão**,
-   antes de qualquer achado técnico e antes da motivação: **"Esse PR endereça o problema do
-   ticket?"** → **Não**, **Parcial** ou **Total**, com **1 nota curta do porquê** (o que o
-   ticket pedia vs. o que o diff realmente faz). Sem essa pergunta respondida, **não dá pra
-   aprovar** — ela é pré-requisito do veredito, não um adendo.
+3. **Resolve o ticket e responde a pergunta-chave (antes de tudo o mais):** lê a
+   **descrição do PR** (`body`) inteira e pega os **links de referência** que tiver nela
+   (ticket, issue, doc — qualquer URL que aponte pro contexto do problema), além de procurar
+   uma referência de ticket (ex.: `ABC-123`) no título e no `headRefName` (nome da branch).
+   Achou referência/link → lê o problema descrito usando o que já estiver disponível no
+   ambiente pra isso (o texto do PR, o conteúdo do link, ou uma ferramenta de tracking de
+   tickets já conectada — a skill é **agnóstica a qual sistema é esse**, nunca assume ou
+   nomeia um específico). **Não achou nenhuma referência, link nem descrição do problema** →
+   marca a checagem como **"sem ticket referenciado"** e segue (isso não bloqueia sozinho —
+   não tem o que comparar). Com o problema em mãos, responde a **primeira pergunta da
+   revisão**, antes de qualquer achado técnico e antes da motivação: **"Esse PR endereça o
+   problema do ticket?"** → **Não**, **Parcial** ou **Total**, com **1 nota curta do
+   porquê** (o que o ticket pedia vs. o que o diff realmente faz). Sem essa pergunta
+   respondida, **não dá pra aprovar** — ela é pré-requisito do veredito, não um adendo.
 4. **Nomeia a sessão** logo no começo: define o título da sessão do Claude Code como
    **`Rogerin Revisando <N>`** — `<N>` = número do PR. Mais de um PR → lista separada por
    vírgula (`Rogerin Revisando 123, 456`). Usa a ferramenta de título de sessão do Claude
