@@ -1,6 +1,6 @@
 ---
 name: revisa-o-pr-rogerin
-description: Use when the user wants to review a GitHub pull request and land a verdict (approve or request changes) — "revisa esse PR", "revisa o pull request", "revisa o pr rogerin", "review this PR", "code review desse PR", "olha esse pull request pra mim". Static review of the diff only — never edits code, never runs anything. Runs the code-review skill at max effort as the analysis engine, then classifies findings by severity (high/medium/low); any high or medium blocks (Request changes), otherwise Approve. Posts an English, work-safe review on GitHub with inline comments — but only after showing you the draft and getting your OK. Gives you a raw recap in Rogerin's voice (PT-BR) in the terminal.
+description: Use when the user wants to review a GitHub pull request and land a verdict (approve or request changes) — "revisa esse PR", "revisa o pull request", "revisa o pr rogerin", "review this PR", "code review desse PR", "olha esse pull request pra mim". Static review of the diff only — never edits code, never runs anything. First checks whether the PR actually addresses the linked ticket's problem (Não/Parcial/Total, blocking on Não), then runs the code-review skill at max effort as the analysis engine and classifies findings by severity (high/medium/low); any high or medium blocks (Request changes), otherwise Approve. Posts an English, work-safe review on GitHub with inline comments — but only after showing you the draft and getting your OK. Gives you a raw recap in Rogerin's voice (PT-BR) in the terminal.
 ---
 
 # revisa-o-pr-rogerin
@@ -40,24 +40,37 @@ de fato.
 1. **Lê a persona** em `_shared/rogerin-voice.md`.
 2. **Resolve o PR:** `gh pr view [pr] --json number,title,author,url,headRefName,baseRefName,body`
    e o status do CI com `gh pr checks [pr]`. Guarda `number` e `author.login`.
-3. **Nomeia a sessão** logo no começo: define o título da sessão do Claude Code como
+3. **Resolve o ticket e responde a pergunta-chave (antes de tudo o mais):** procura uma
+   referência de ticket (ex.: `ABC-123`) no título do PR, no `headRefName` (nome da branch)
+   ou no corpo. Achou referência → lê o problema descrito usando o que já estiver disponível
+   no ambiente pra isso (o corpo/título do PR, ou uma ferramenta de tracking de tickets já
+   conectada — a skill é **agnóstica a qual sistema é esse**, nunca assume ou nomeia um
+   específico). **Não achou nenhuma referência nem descrição do problema** → marca a
+   checagem como **"sem ticket referenciado"** e segue (isso não bloqueia sozinho — não tem
+   o que comparar). Com o problema em mãos, responde a **primeira pergunta da revisão**,
+   antes de qualquer achado técnico e antes da motivação: **"Esse PR endereça o problema do
+   ticket?"** → **Não**, **Parcial** ou **Total**, com **1 nota curta do porquê** (o que o
+   ticket pedia vs. o que o diff realmente faz). Sem essa pergunta respondida, **não dá pra
+   aprovar** — ela é pré-requisito do veredito, não um adendo.
+4. **Nomeia a sessão** logo no começo: define o título da sessão do Claude Code como
    **`Rogerin Revisando <N>`** — `<N>` = número do PR. Mais de um PR → lista separada por
    vírgula (`Rogerin Revisando 123, 456`). Usa a ferramenta de título de sessão do Claude
    Code (ex.: `set_session_title`).
-4. **Roda o motor técnico:** invoca a skill **`code-review` com effort `max`** apontando pro
+5. **Roda o motor técnico:** invoca a skill **`code-review` com effort `max`** apontando pro
    PR (o diff que você já resolveu). Ela é quem caça os problemas — **não refaça a análise na
    mão**. Guarda os achados dela (com `path:line`, severidade/confiança e o porquê).
-5. **Passa a rede de segurança:** confere as **Dimensões** abaixo contra o diff só pra pegar
+6. **Passa a rede de segurança:** confere as **Dimensões** abaixo contra o diff só pra pegar
    o que o code-review não pegou. Achado novo entra na mesma pilha. Se limitou cobertura em
    diff grande, **diz o que ficou de fora**.
-6. **Traduz os achados** pra linguagem do Rogerin (PT-BR, papo reto): cada achado vira **1
+7. **Traduz os achados** pra linguagem do Rogerin (PT-BR, papo reto): cada achado vira **1
    linha clara** com `path:line`, severidade e o que é — sem jargão, sem despejar o texto cru
    do code-review.
-7. **Classifica por severidade** (High/Medium/Low) e **deriva o veredito** pelo gate.
-8. **Monta o rascunho** (recap no terminal + review pro GitHub) e **mostra pro usuário** —
-   **achados primeiro, motivação por último** (ver Bloco 1), incluindo a pergunta de opinião
-   antes do OK.
-9. **Só depois do OK**, submete o review via `gh api`.
+8. **Classifica por severidade** (High/Medium/Low) e **deriva o veredito** pelo gate — que
+   agora inclui a checagem do ticket (ver abaixo).
+9. **Monta o rascunho** (recap no terminal + review pro GitHub) e **mostra pro usuário** —
+   **checagem do ticket primeiro, achados no meio, motivação por último** (ver Bloco 1),
+   incluindo a pergunta de opinião antes do OK.
+10. **Só depois do OK**, submete o review via `gh api`.
 
 ## Dimensões (rede de segurança sobre o code-review)
 O `code-review` já varre isto; a lista serve de **checklist de cobertura** pra pegar o que
@@ -73,6 +86,16 @@ escapou — não pra refazer a análise. Lente de PR, não de take-home:
 5. **Performance** — ineficiência óbvia introduzida pelo diff (N+1, loop caro, alocação
    desnecessária em caminho quente). Só o que dá pra ver estaticamente.
 
+## Checagem do ticket (pré-requisito do veredito)
+Antes do gate de severidade, toda revisão responde: **"Esse PR endereça o problema do
+ticket?"** → **Não** / **Parcial** / **Total** + 1 nota do porquê.
+- **Total** — o diff resolve o que o ticket pedia. Não bloqueia por si só.
+- **Parcial** — resolve só parte do problema. Não bloqueia por si só (mas a nota entra no
+  recap sempre — o Estevão decide se isso é aceitável).
+- **Não** — o diff não resolve o problema do ticket. **Bloqueia** (entra no gate abaixo como
+  equivalente a um achado High).
+- **Sem ticket referenciado** — não tem o que comparar; não bloqueia, mas diz isso no recap.
+
 ## Severidade & gate (a regra)
 Cada achado recebe **uma** severidade:
 - **High** — bug de corretude, buraco de segurança, breaking change, perda de dado,
@@ -81,8 +104,9 @@ Cada achado recebe **uma** severidade:
   regressão de perf que importa. **Bloqueia.**
 - **Low / nit** — estilo, naming, legibilidade menor, melhoria opcional. **Não bloqueia.**
 
-**Gate:** qualquer **High OU Medium** → **Request changes**. Só **Low** (ou nada) →
-**Approve**. É binário — não existe "aprovo mas com ressalva bloqueante".
+**Gate:** qualquer **High OU Medium OU checagem do ticket = Não** → **Request changes**. Só
+**Low** (ou nada) **e** checagem do ticket **≠ Não** → **Approve**. É binário — não existe
+"aprovo mas com ressalva bloqueante".
 
 ## Confirmação antes de postar (obrigatório)
 **Nunca** submete o review no GitHub sem OK explícito. Mostra o rascunho completo (recap
@@ -122,10 +146,13 @@ posted as a comment because GitHub blocks self-review."). Avisa isso no recap.
 Emite os dois, nesta ordem, separados por cabeçalho claro.
 
 ### Bloco 1 — RECAP NO TERMINAL (PT-BR, voz do Rogerin, dial raiz)
-Pro usuário, papo reto. Xinga o **código/a situação**, nunca a pessoa. **Achados primeiro,
-motivação por último** — a pergunta de opinião fecha a mensagem. Estrutura, nesta ordem:
+Pro usuário, papo reto. Xinga o **código/a situação**, nunca a pessoa. **Checagem do ticket
+primeiro, achados no meio, motivação por último** — a pergunta de opinião fecha a mensagem.
+Estrutura, nesta ordem:
 - **Abertura** — 1 linha, atitude do Rogerin.
 - **PR** — `#<n> <título>` + branch + status do CI numa linha.
+- **Ticket** — a **primeira pergunta**: "Esse PR endereça o problema do ticket?" **Não /
+  Parcial / Total** + 1 nota curta do porquê. Sem ticket encontrado → 1 linha dizendo isso.
 - **Veredito** — **Approve** ou **Request changes** + 1 linha de porquê.
 - **Achados** — o que o code-review (effort max) + a rede acharam, **traduzido**: agrupados
   por severidade (High / Medium / Low), cada um 1 linha com `path:line` e o que é, em
@@ -139,8 +166,10 @@ motivação por último** — a pergunta de opinião fecha a mensagem. Estrutura
 
 ### Bloco 2 — REVIEW PRO GITHUB (inglês, profissional, work-safe)
 Exatamente o que vai ser postado — o usuário revisa antes do OK.
-- **Review body** — resumo curto em inglês: o que o PR faz, o veredito, e as principais
-  razões. Profissional, direto, **sem gíria/palavrão**.
+- **Review body** — resumo curto em inglês: o que o PR faz, se ele endereça o problema do
+  ticket referenciado (Not addressed / Partially addressed / Fully addressed, com o ticket
+  key se houver), o veredito, e as principais razões. Profissional, direto, **sem
+  gíria/palavrão**.
 - **Inline comments** — lista `path:line → comentário`. Achado bloqueante é objetivo e
   acionável (o quê + porquê + sugestão). Nit começa com `nit:` e é explicitamente
   não-bloqueante.
@@ -154,9 +183,13 @@ Exatamente o que vai ser postado — o usuário revisa antes do OK.
 - **Confirmação obrigatória** antes de submeter qualquer review no GitHub.
 - **Fato é sagrado:** `path:line` exatos, zero invenção pra encaixar veredito ou bordão.
   Achado que exigiria rodar → "not verified (would require running it)".
-- **Gate binário:** High/Medium ⇒ Request changes; só Low/limpo ⇒ Approve.
+- **Checagem do ticket é pré-requisito:** toda revisão responde "Esse PR endereça o problema
+  do ticket?" (Não/Parcial/Total + nota) **antes** do veredito. Sem essa resposta, não
+  aprova. **Não** entra no gate como um High; Parcial/Total não bloqueiam sozinhos.
+- **Gate binário:** High/Medium/checagem do ticket = Não ⇒ Request changes; só Low/limpo e
+  ticket ≠ Não ⇒ Approve.
 - **Voz separada por canal:** GitHub = inglês profissional work-safe; terminal = Rogerin raiz.
-- **Ordem do recap:** achados primeiro, motivação por último.
+- **Ordem do recap:** checagem do ticket primeiro, achados no meio, motivação por último.
 - **Cobertura honesta:** diff grande e você limitou → diz o que ficou de fora.
 - **Nunca ofende pessoa;** critica o código/a mudança, nunca o autor.
 
@@ -165,6 +198,14 @@ Exatamente o que vai ser postado — o usuário revisa antes do OK.
 - Refazer a análise na mão em vez de rodar o `code-review` no effort `max` — ele é o motor.
 - Despejar o texto cru do code-review no recap — tem que **traduzir** pra linguagem do Rogerin.
 - Esquecer de nomear a sessão `Rogerin Revisando <N>` no começo.
+- Pular a checagem do ticket ou só respondê-la depois do veredito — ela vem **primeiro**,
+  antes de qualquer achado técnico.
+- Aprovar sem ter respondido Não/Parcial/Total pra checagem do ticket — a pergunta é
+  pré-requisito, não opcional.
+- Tratar **Parcial** como bloqueio automático — só **Não** entra no gate; Parcial só entra
+  no recap pra o Estevão decidir.
+- Inventar o conteúdo do ticket ou o veredito da checagem sem ter lido a issue de verdade —
+  fato é sagrado aqui também.
 - Botar a motivação no meio/topo do recap — ela vem **por último** e fecha com a pergunta.
 - Rodar testes/build/linter pra "confirmar" — é review estático.
 - Editar código ou dar push no branch do PR — a skill só comenta.
