@@ -31,6 +31,7 @@ Pronto. As skills aparecem. Pra atualizar depois de adicionar skills novas: `/pl
 | `posta-no-slack-rogerin` | Redige uma mensagem de Slack em **inglês profissional** — curta, mas com detalhe suficiente pra explicar a intenção — no formato mrkdwn. Mostra o rascunho e só envia depois do teu OK (via Slack, ou texto pra copiar); recap na voz do Rogerin. Dispara com "posta no Slack", "avisa o time no Slack", "write a Slack post"... |
 | `mede-o-tom-rogerin` | Mede se um texto (doc ou mensagem que você vai mandar) **soa como você** antes de sair. Pontua contra teu perfil de voz em 4 dimensões (soa como você / genérico / **encurtado demais** / registro), marca os trechos e sugere rewrite. Só análise — não envia nem edita. Dispara com "mede o tom", "isso soa como eu?", "tá genérico?", "check the tone"... |
 | `traduz-rogerin` | Cola inglês ou português complicado → devolve **PT-BR limpo e claro na tua voz**, feito pra você entender de primeira. Detecta a direção sozinha e mantém termo técnico que você já usa em inglês (PR, deploy...). Estático. Dispara com "traduz isso", "me explica em português", "simplifica esse texto", "translate this"... |
+| `usa-o-fable-rogerin` | Segunda opinião no trabalho **desta sessão** (PR ou as mudanças de código): despacha um **subagent obrigatório rodando o modelo Fable**, com contexto limpo, que lê o diff e **aponta os problemas** — severidade + `path:line`. Só leitura: não edita, não roda, não conserta nada sem teu OK. Dispara com "usa o fable", "revisa com fable", "manda o fable revisar", "fable review"... |
 
 ## A voz
 
@@ -73,7 +74,9 @@ rogerin/
 │   │   └── SKILL.md
 │   ├── mede-o-tom-rogerin/
 │   │   └── SKILL.md
-│   └── traduz-rogerin/
+│   ├── traduz-rogerin/
+│   │   └── SKILL.md
+│   └── usa-o-fable-rogerin/
 │       └── SKILL.md
 └── docs/specs/            # designs
 ```
